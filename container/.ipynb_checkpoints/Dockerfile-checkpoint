@@ -20,10 +20,14 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
 # linking them together. Likewise, pip leaves the install caches populated which uses
 # a significant amount of space. These optimizations save a fair amount of space in the
 # image, which reduces start up time.
-RUN wget https://bootstrap.pypa.io/3.3/get-pip.py && python3.5 get-pip.py && \
-    pip3 install numpy==1.14.3 scipy scikit-learn==0.19.1 xgboost==0.72.1 pandas==0.22.0 flask gevent==1.3 gunicorn && \
-        (cd /usr/local/lib/python3.5/dist-packages/scipy/.libs; rm *; ln ../../numpy/.libs/* .) && \
+RUN wget https://bootstrap.pypa.io/3.3/get-pip.py && \
+        python3.5 get-pip.py && \
+        pip install --upgrade pip && \
+        pip3 install numpy==1.18.5 scipy==1.4.1 scikit-learn==0.22.2.post1 xgboost==1.1.1 pandas flask==1.1.2 gevent==1.4 gunicorn==20.0.4 && \
+        (cd /usr/local/lib/python3.5/dist-packages/scipy/.libs; rm *) && \
         rm -rf /root/.cache
+
+# ; ln ../../numpy/.libs/* . (removed from after the rm* command)
 
 # Set some environment variables. PYTHONUNBUFFERED keeps Python from buffering our standard
 # output stream, which means that logs can be delivered to the user quickly. PYTHONDONTWRITEBYTECODE
